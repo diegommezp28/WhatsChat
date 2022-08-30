@@ -15,6 +15,7 @@ async function sendMessageTo(number, message) {
     numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(message)}`)
     numberLink.click()
     await sleep(2000);
+    numberLink.remove();
 
     let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
     if (!wrongNumberButton) {
@@ -46,7 +47,7 @@ async function sendAllMessages(messageTemplate, csvList) {
 }
 
 
-export function formatMessage(messageTemplate, fields) {
+function formatMessage(messageTemplate, fields) {
 
     let formattedMessage = messageTemplate;
 
@@ -74,6 +75,7 @@ function capitalizeFirstLetter(string) {
 // If number is wrong act upon it -->
 // find text box, edit text box, send message, wait a little bit, repeat --->
 //Message preview --->
+//Ranom time between sending
 //css
 //Attach files, add caption
 // emojis, text style)

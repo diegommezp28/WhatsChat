@@ -1,5 +1,3 @@
-import { formatMessage } from './inject.js';
-
 let csv_text = document.getElementById("csv_text");
 let csv_file = document.getElementById("csv_file");
 let send_button = document.getElementById("send_button");
@@ -16,7 +14,7 @@ async function handleMessageSubmit() {
     let messageTemplate = message_template.value;
     let contacts_csv = csv_text.value;
 
-    csvList = csvToArray(contacts_csv);
+    let csvList = csvToArray(contacts_csv);
 
     chrome.storage.sync.set({ messageTemplate });
     chrome.storage.sync.set({ csvList });
@@ -72,53 +70,27 @@ function csvToArray(str, delimiter = ',', header = false) {
 
 }
 
-// send_button.addEventListener("click", async () => {
-//     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-//     let messageTemplate = document.getElementById("message").value;
-//     chrome.storage.sync.set({ messageTemplate });
+function formatMessage(messageTemplate, fields) {
 
-//     chrome.scripting.executeScript({
-//         target: { tabId: tab.id },
-//         files: ["assets/js/inject.js"]
-//         // func: sendCurrentMessage,
-//     });
+    let formattedMessage = messageTemplate;
 
-// })
+    if (fields && formattedMessage) {
+        let name = capitalizeFirstLetter(fields[0]);
+        formattedMessage = formattedMessage.replace(`[name]`, name.trim());
+
+        for (let i = 1; i < fields.length; i++) {
+            formattedMessage = formattedMessage.replace(`[col${i + 1}]`, fields[i].trim())
+        }
+    }
+    return formattedMessage;
+
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 
-
-// function sendMessageTo(message, number) {
-//     let numberLink = document.createElement("a");
-//     numberLink.id = "number_link";
-//     document.body.append(numberLink);
-//     numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${number}&text=`)
-
-//     setTimeout(() => numberLink.click(), () => {
-//         numberLink.remove();
-//     }, 0)
-
-// }
-
-// function sendCurrentMessage() {
-//     console.log("Messaging");
-//     chrome.storage.sync.get(['messageData'], (result) => {
-//         [message, phoneNumber] = result.messageData
-//         console.log('Value currently is ' + result.messageData);
-//         // sendMessageTo(message, phoneNumber)
-
-//         let numberLink = document.createElement("a");
-//         numberLink.id = "number_link";
-//         document.body.append(numberLink);
-//         numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${phoneNumber}&text=`)
-
-//         setTimeout(() => numberLink.click(), () => {
-//             numberLink.remove();
-//         }, 0)
-//     });
-
-//     // sendMessageTo(message, phoneNumber)
-
-// }
 
 
 
