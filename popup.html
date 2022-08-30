@@ -5,18 +5,34 @@
     <link rel="stylesheet" href="assets/css/popup.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="main_container">
       <h1>WhatsApp Bulk Messaging</h1>
-      <textarea placeholder="name, phone" id="csv_text" required></textarea>
-      <input id="csv_file" type="file" accept=".csv" placeholder="Select CSV" />
-      <textarea placeholder="message" id="message" required></textarea>
+      <span>CSV Data</span>
+      <textarea
+        placeholder="name, phone"
+        id="csv_text"
+        class="mg-10"
+        required
+      ></textarea>
+      <div class="mg-10">
+        <input id="csv_file" type="file" accept=".csv" />
+      </div>
+      <span>Message Template</span>
+      <textarea
+        class="mg-10"
+        placeholder="message"
+        id="message"
+        required
+      ></textarea>
+      <span>Message Preview</span>
       <textarea
         readonly
         placeholder="Message Preview"
         id="message_preview"
       ></textarea>
-      <button id="send_button">Send</button>
-      <div id="validation"></div>
+      <div class="mg-t-10">
+        <button id="send_button">Send</button>
+      </div>
     </div>
     <script src="assets/js/popup.js" type="module"></script>
     <script src="assets/js/inject.js" type="module"></script>
