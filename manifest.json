@@ -2,7 +2,7 @@
     "name": "WhatsChat",
     "version": "1.0",
     "manifest_version": 3,
-    "description": "WhtsApp Bulk message sender",
+    "description": "WhatsApp Bulk message sender",
     "background": {
         "service_worker": "assets/js/background.js"
         },

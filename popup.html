@@ -6,13 +6,18 @@
   </head>
   <body>
     <div class="container">
-      <h1>WhatsApp Bulk Mesagging</h1>
+      <h1>WhatsApp Bulk Messaging</h1>
       <textarea placeholder="name, phone" id="csv_text" required></textarea>
       <input id="csv_file" type="file" accept=".csv" placeholder="Select CSV" />
       <textarea placeholder="message" id="message" required></textarea>
+      <textarea
+        readonly
+        placeholder="Message Preview"
+        id="message_preview"
+      ></textarea>
       <button id="send_button">Send</button>
       <div id="validation"></div>
     </div>
-    <script type="text/javascript" src="assets/js/popup.js"></script>
+    <script src="assets/js/popup.js" type="module"></script>
   </body>
 </html>

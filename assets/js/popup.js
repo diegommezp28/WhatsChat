@@ -1,9 +1,13 @@
+import { formatMessage } from './inject.js';
+
 let csv_text = document.getElementById("csv_text");
 let csv_file = document.getElementById("csv_file");
 let send_button = document.getElementById("send_button");
 let message_template = document.getElementById("message");
+let message_preview = document.getElementById("message_preview");
 
 csv_file.addEventListener("change", handleFileSelect);
+message_template.addEventListener("input", handleTemplateChange);
 send_button.addEventListener("click", handleMessageSubmit);
 
 async function handleMessageSubmit() {
@@ -34,9 +38,22 @@ function handleFileSelect(evt) {
         let csvList = csvToArray(text);
         // TODO: add warning in case parsing fails
         chrome.storage.sync.set({ csvList });
+        csv_file.value = null;
     };
     reader.readAsText(file);
 
+}
+
+async function handleTemplateChange(evt) {
+    let template = evt.target.value;
+    chrome.storage.sync.get(['csvList'], (result) => {
+        let csvList = result.csvList;
+        let fields = csvList[0];
+        let formattedTemplate = formatMessage(template, fields);
+        message_preview.value = formattedTemplate;
+
+
+    });
 }
 
 function csvToArray(str, delimiter = ',', header = false) {

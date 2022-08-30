@@ -14,23 +14,31 @@ async function sendMessageTo(number, message) {
     document.body.append(numberLink);
     numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(message)}`)
     numberLink.click()
-    await sleep(3000);
-    let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
-    console.log(sendButton);
-    sendButton.click();
-    await sleep(500);
+    await sleep(2000);
+
+    let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
+    if (!wrongNumberButton) {
+        let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
+        console.log(sendButton);
+        sendButton.click();
+        await sleep(500);
+    }
+    else {
+        wrongNumberButton.click();
+        await sleep(500);
+
+    }
 
 }
 
 async function sendAllMessages(messageTemplate, csvList) {
-    // let firstNumber = csvList[0][1];
-    // sendMessageTo(firstNumber, formatMessage(messageTemplate, csvList[0]));
 
     for (let i = 0; i < csvList.length; i++) {
+        console.log(csvList[i]);
         let number = csvList[i][1];
-        let name = csvList[i][0];
-
-        await sendMessageTo(number, formatMessage(messageTemplate, csvList[i]));
+        if (number) {
+            await sendMessageTo(number.trim(), formatMessage(messageTemplate, csvList[i]));
+        }
 
 
     }
@@ -38,16 +46,34 @@ async function sendAllMessages(messageTemplate, csvList) {
 }
 
 
-function formatMessage(messageTemplate, fields) {
-    return messageTemplate;
+export function formatMessage(messageTemplate, fields) {
 
+    let formattedMessage = messageTemplate;
+
+    if (fields && formattedMessage) {
+        let name = capitalizeFirstLetter(fields[0]);
+        formattedMessage = formattedMessage.replace(`[name]`, name.trim());
+
+        for (let i = 1; i < fields.length; i++) {
+            formattedMessage = formattedMessage.replace(`[col${i + 1}]`, fields[i].trim())
+        }
+    }
+    return formattedMessage;
+
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 //input field for template -->
 //input field to upload csv -->
-// Format message (validate csv, validate numbers, replace fields),
-// find text box, edit text box, send message, wait a little bit, repeat
-//Message preview
+// Format message (validate csv, ?
+// replace fields),  --->
+// validate numbers, 
+// If number is wrong act upon it -->
+// find text box, edit text box, send message, wait a little bit, repeat --->
+//Message preview --->
 //css
 //Attach files, add caption
 // emojis, text style)
