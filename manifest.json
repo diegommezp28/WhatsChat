@@ -1,0 +1,26 @@
+{
+    "name": "WhatsChat",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "WhtsApp Bulk message sender",
+    "background": {
+        "scripts": ["assets/js/background.js"],
+        "persistent": false
+        },
+    "permissions": ["activeTab", "storage"],
+    "browser_action": {
+        "default_title": "WhatsApp Bulk sender",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/assets/icons/message_16.png",
+            "32": "/assets/icons/message_32.png",
+            "128": "/assets/icons/message_128.png"
+          }
+      
+        },
+    "icons": {
+        "16": "/assets/icons/message_16.png",
+        "32": "/assets/icons/message_32.png",
+        "128": "/assets/icons/message_128.png"
+        }
+  }
