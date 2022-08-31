@@ -7,6 +7,7 @@ let message_preview = document.getElementById("message_preview");
 csv_file.addEventListener("change", handleFileSelect);
 message_template.addEventListener("input", handleTemplateChange);
 send_button.addEventListener("click", handleMessageSubmit);
+csv_text.addEventListener("input", handleCsvTextChange);
 
 async function handleMessageSubmit() {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -23,6 +24,15 @@ async function handleMessageSubmit() {
         target: { tabId: tab.id },
         files: ["assets/js/inject.js"]
     });
+}
+
+function handleCsvTextChange(evt) {
+    let contacts_csv = evt.target.value;
+    let template = message_template.value;
+    let csvList = csvToArray(contacts_csv);
+    let fields = csvList[0];
+    let formattedTemplate = formatMessage(template, fields);
+    message_preview.value = formattedTemplate;
 }
 
 function handleFileSelect(evt) {
@@ -44,14 +54,11 @@ function handleFileSelect(evt) {
 
 async function handleTemplateChange(evt) {
     let template = evt.target.value;
-    chrome.storage.sync.get(['csvList'], (result) => {
-        let csvList = result.csvList;
-        let fields = csvList[0];
-        let formattedTemplate = formatMessage(template, fields);
-        message_preview.value = formattedTemplate;
-
-
-    });
+    let contacts_csv = csv_text.value;
+    let csvList = csvToArray(contacts_csv);
+    let fields = csvList[0];
+    let formattedTemplate = formatMessage(template, fields);
+    message_preview.value = formattedTemplate;
 }
 
 function csvToArray(str, delimiter = ',', header = false) {
