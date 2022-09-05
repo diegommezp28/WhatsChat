@@ -1,0 +1,25 @@
+{
+    "name": "WhatsChat",
+    "version": "1.0",
+    "manifest_version": 3,
+    "description": "WhatsApp Bulk message sender",
+    "background": {
+        "service_worker": "assets/js/background.js"
+        },
+    "permissions": ["activeTab", "storage", "scripting"],
+    "action": {
+        "default_title": "WhatsApp Bulk sender",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/assets/icons/message_16.png",
+            "32": "/assets/icons/message_32.png",
+            "128": "/assets/icons/message_128.png"
+          }
+      
+        },
+    "icons": {
+        "16": "/assets/icons/message_16.png",
+        "32": "/assets/icons/message_32.png",
+        "128": "/assets/icons/message_128.png"
+        }
+  }
