@@ -8,8 +8,8 @@ export const EmojiPicker = function EmojiPicker(options) {
     let categoriesHTML = '';
     let emojiList = undefined;
     let moseMove = false;
-    const pickerWidth = this.options.closeButton ? 370 : 350;
-    const pickerHeight = 400;
+    const pickerWidth = this.options.closeButton ? 270 : 250;
+    const pickerHeight = 200;
 
     this.lib = function (el = undefined) {
 
@@ -7685,6 +7685,7 @@ export const EmojiPicker = function EmojiPicker(options) {
             `;
 
             document.head.insertAdjacentHTML('beforeend', styles);
+            // document.getElementById("emoji_popup").innerHTML = styles;
         },
 
 
@@ -7915,7 +7916,7 @@ export const EmojiPicker = function EmojiPicker(options) {
             if (moseMove) {
                 e.preventDefault();
                 const el = document.querySelector('.fg-emoji-container');
-                el.style.left = e.clientX - 320 + 'px';
+                el.style.left = e.clientX - 230 + 'px';
                 el.style.top = e.clientY - 10 + 'px';
             }
         }
