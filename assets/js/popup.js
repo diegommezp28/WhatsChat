@@ -5,9 +5,56 @@ let message_template = document.getElementById("message");
 let message_preview = document.getElementById("message_preview");
 
 csv_file.addEventListener("change", handleFileSelect);
-message_template.addEventListener("input", handleTemplateChange);
-send_button.addEventListener("click", handleMessageSubmit);
 csv_text.addEventListener("input", handleCsvTextChange);
+send_button.addEventListener("click", handleMessageSubmit);
+message_template.addEventListener("input", handleTemplateChange);
+console.log("hola");
+// debugger;
+
+(async () => {
+    const src = chrome.runtime.getURL('assets/js/vanillaEmojiPicker.js');
+    const contentScript = await import(src);
+    const EmojiPicker = contentScript.EmojiPicker;
+    new EmojiPicker({
+        trigger: [
+            {
+                selector: '.emoji_picker_button',
+                insertInto: ['#message'] // If there is only one '.selector', than it can be used without array
+            }
+        ],
+        closeButton: true,
+        specialButtons: 'green' // #008000, rgba(0, 128, 0);
+    });
+})();
+
+
+function handleFileSelect(evt) {
+    let file = evt.target.files[0];
+
+    let reader = new FileReader();
+
+    reader.onload = function (event) {
+        let text = event.target.result;
+        chrome.storage.sync.set({ file: [file.name, text] });
+        csv_text.value = text;
+        console.log(text);
+        let csvList = csvToArray(text);
+        // TODO: add warning in case parsing fails
+        chrome.storage.sync.set({ csvList });
+        csv_file.value = null;
+    };
+    reader.readAsText(file);
+
+}
+
+function handleCsvTextChange(evt) {
+    let contacts_csv = evt.target.value;
+    let template = message_template.value;
+    let csvList = csvToArray(contacts_csv);
+    let fields = csvList[0];
+    let formattedTemplate = formatMessage(template, fields);
+    message_preview.value = formattedTemplate;
+}
 
 async function handleMessageSubmit() {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -26,31 +73,6 @@ async function handleMessageSubmit() {
     });
 }
 
-function handleCsvTextChange(evt) {
-    let contacts_csv = evt.target.value;
-    let template = message_template.value;
-    let csvList = csvToArray(contacts_csv);
-    let fields = csvList[0];
-    let formattedTemplate = formatMessage(template, fields);
-    message_preview.value = formattedTemplate;
-}
-
-function handleFileSelect(evt) {
-    let file = evt.target.files[0];
-    let reader = new FileReader();
-
-    reader.onload = function (event) {
-        let text = event.target.result;
-        csv_text.value = text;
-        console.log(text);
-        let csvList = csvToArray(text);
-        // TODO: add warning in case parsing fails
-        chrome.storage.sync.set({ csvList });
-        csv_file.value = null;
-    };
-    reader.readAsText(file);
-
-}
 
 async function handleTemplateChange(evt) {
     let template = evt.target.value;
@@ -85,7 +107,7 @@ function formatMessage(messageTemplate, fields) {
         let name = capitalizeFirstLetter(fields[0]);
         formattedMessage = formattedMessage.replace(`[name]`, name.trim());
 
-        for (let i = 1; i < fields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
             formattedMessage = formattedMessage.replace(`[col${i + 1}]`, fields[i].trim())
         }
     }
@@ -96,11 +118,3 @@ function formatMessage(messageTemplate, fields) {
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-
-
-
-
-
-
-

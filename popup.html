@@ -18,23 +18,29 @@
         <input id="csv_file" type="file" accept=".csv" />
       </div>
       <span>Message Template</span>
-      <textarea
-        class="mg-10"
-        placeholder="message"
-        id="message"
-        required
-      ></textarea>
+      <div class="flex-col">
+        <textarea
+          class="mg-10"
+          placeholder="message"
+          id="message"
+          class="message"
+          required
+        ></textarea>
+        <button class="emoji_picker_button">Pick Emoji</button>
+      </div>
       <span>Message Preview</span>
       <textarea
         readonly
         placeholder="Message Preview"
         id="message_preview"
+        class="message_preview"
       ></textarea>
       <div class="mg-t-10">
         <button id="send_button">Send</button>
       </div>
     </div>
     <script src="assets/js/popup.js" type="module"></script>
+    <script src="assets/js/vanillaEmojiPicker.js" type="module"></script>
     <script src="assets/js/inject.js" type="module"></script>
   </body>
 </html>

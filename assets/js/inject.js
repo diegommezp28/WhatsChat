@@ -9,6 +9,7 @@ async function sleep(ms = 1000) { return new Promise(resolve => setTimeout(resol
  * @param {*} number 
  */
 async function sendMessageTo(number, message) {
+
     let numberLink = document.createElement("a");
     numberLink.id = "number_link";
     document.body.append(numberLink);
@@ -16,13 +17,37 @@ async function sendMessageTo(number, message) {
     numberLink.click()
     await sleep(2000);
     numberLink.remove();
-
+    // https://api.whatsapp.com/send?phone=+573022371079&text='%F0%9F%91%8C'}👌🏼👌🏼
     let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
     if (!wrongNumberButton) {
         let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
         console.log(sendButton);
         sendButton.click();
         await sleep(500);
+
+        // Take this with a giant grain of salt
+        let clip = document.querySelector('[data-testid="conversation-clip"]');
+        clip.children[0].click();
+        await sleep(300);
+        let inputDiv = document.querySelector('[data-testid="attach-document"]').nextSibling;
+        chrome.storage.sync.get(['file'], async (result) => {
+            let fileList = result.file;
+            let file = new File([fileList[1]], fileList[0], { type: 'text/plain' })
+            console.log(typeof file);
+            // console.log(file);
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file)
+            inputDiv.files = dataTransfer.files
+
+            await sleep(5000);
+            let inputs = document.getElementsByTagName("input");
+            for (let i = 0; i < inputs.length; i++) {
+                console.log(inputs[i].files);
+            }
+
+
+        });
+
     }
     else {
         wrongNumberButton.click();
@@ -80,6 +105,16 @@ function capitalizeFirstLetter(string) {
 //Attach files, add caption
 // emojis, text style)
 //Stats and % of succesfully sent messages
+
+// Number without WhatsApp, +573022371078, 23
+// invalid phone number, +57310341, 22
+// lenny, +573106882967, 21
+// valentina, +573103414225, 22
+// diego, +573022371079, 22
+// Number without WhatsApp, +573022371078, 23
+// invalid phone number, +57310341, 22
+// lenny, +573106882967, 21
+// valentina, +573103414225, 22
 
 //Release
 
