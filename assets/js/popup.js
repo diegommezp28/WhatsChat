@@ -3,12 +3,14 @@ let csv_file = document.getElementById("csv_file");
 let send_button = document.getElementById("send_button");
 let message_template = document.getElementById("message");
 let message_preview = document.getElementById("message_preview");
+let add_msg_button = document.getElementById("add_msg_button");
 
 csv_file.addEventListener("change", handleFileSelect);
 csv_text.addEventListener("input", handleCsvTextChange);
 send_button.addEventListener("click", handleMessageSubmit);
 message_template.addEventListener("input", handleTemplateChange);
-console.log("hola");
+add_msg_button.addEventListener("click", handleAddMessage);
+// console.log("hola");
 // debugger;
 
 (async () => {
@@ -26,6 +28,13 @@ console.log("hola");
         specialButtons: 'green' // #008000, rgba(0, 128, 0);
     });
 })();
+
+function handleAddMessage(evt) {
+    const MSG_SEPARATOR = "\n----------\n";
+    message_template.value += MSG_SEPARATOR;
+    // message_template.onchange();
+    message_template.dispatchEvent(new Event('input'));
+}
 
 
 function handleFileSelect(evt) {

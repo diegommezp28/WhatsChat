@@ -7843,22 +7843,23 @@ export const EmojiPicker = function EmojiPicker(options) {
 
             // Check if selector is an array
             myField.forEach(myField => {
-                myField.value += myValue;
-                // if (document.selection) {
-                //     myField.focus();
-                //     sel = document.selection.createRange();
-                //     sel.text = myValue;
-                // } else if (myField.selectionStart || myField.selectionStart == "0") {
-                //     const startPos = myField.selectionStart;
-                //     const endPos = myField.selectionEnd;
-                //     myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+                // myField.value += myValue;
+                if (document.selection) {
+                    myField.focus();
+                    sel = document.selection.createRange();
+                    sel.text = myValue;
+                } else if (myField.selectionStart || myField.selectionStart == "0") {
+                    const startPos = myField.selectionStart;
+                    const endPos = myField.selectionEnd;
+                    myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
 
-                //     functions.setCaretPosition(myField, startPos + 2)
+                    functions.setCaretPosition(myField, startPos + 2)
 
-                // } else {
-                //     myField.value += myValue;
-                //     myField.focus()
-                // }
+                } else {
+                    myField.value += myValue;
+                    myField.focus()
+                }
+                myField.dispatchEvent(new Event('input'));
 
             })
         },

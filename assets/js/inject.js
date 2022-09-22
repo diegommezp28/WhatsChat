@@ -8,67 +8,85 @@ async function sleep(ms = 1000) { return new Promise(resolve => setTimeout(resol
  * @param {*} message 
  * @param {*} number 
  */
-async function sendMessageTo(number, message) {
-
-    let numberLink = document.createElement("a");
-    numberLink.id = "number_link";
-    document.body.append(numberLink);
-    numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(message)}`)
-    numberLink.click()
-    await sleep(2000);
-    numberLink.remove();
-    // https://api.whatsapp.com/send?phone=+573022371079&text='%F0%9F%91%8C'}👌🏼👌🏼
-    let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
-    if (!wrongNumberButton) {
-        let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
-        console.log(sendButton);
-        sendButton.click();
-        await sleep(500);
-
-        // Take this with a giant grain of salt
-        let clip = document.querySelector('[data-testid="conversation-clip"]');
-        clip.children[0].click();
-        await sleep(300);
-        let inputDiv = document.querySelector('[data-testid="attach-document"]').nextSibling;
-        chrome.storage.sync.get(['file'], async (result) => {
-            let fileList = result.file;
-            let file = new File([fileList[1]], fileList[0], { type: 'text/plain' })
-            console.log(typeof file);
-            // console.log(file);
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file)
-            inputDiv.files = dataTransfer.files
-
-            await sleep(5000);
-            let inputs = document.getElementsByTagName("input");
-            for (let i = 0; i < inputs.length; i++) {
-                console.log(inputs[i].files);
-            }
-
-
-        });
-
+async function sendMessageTo(number, message, inplace = false) {
+    if (inplace) {
+        // conversation-compose-box-input
+        text_box = document.querySelector('[data-testid="conversation-compose-box-input"]');
+        text_box.focus();
+        document.execCommand("insertText", false, message);
     }
     else {
-        wrongNumberButton.click();
-        await sleep(500);
+        console.log(message);
 
+
+        let numberLink = document.createElement("a");
+        numberLink.id = "number_link";
+        document.body.append(numberLink);
+        numberLink.setAttribute("href", `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(message)}`)
+        numberLink.click()
+        await sleep(2000);
+        numberLink.remove();
+        let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
+        if (!wrongNumberButton) {
+            let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
+            console.log(sendButton);
+            if (sendButton) {
+                sendButton.click();
+                await sleep(500);
+            }
+
+            // // Take this with a giant grain of salt
+            // let clip = document.querySelector('[data-testid="conversation-clip"]');
+            // clip.children[0].click();
+            // await sleep(300);
+            // let inputDiv = document.querySelector('[data-testid="attach-document"]').nextSibling;
+            // chrome.storage.sync.get(['file'], async (result) => {
+            //     let fileList = result.file;
+            //     let file = new File([fileList[1]], fileList[0], { type: 'text/plain' })
+            //     console.log(typeof file);
+            //     // console.log(file);
+            //     const dataTransfer = new DataTransfer();
+            //     dataTransfer.items.add(file)
+            //     inputDiv.files = dataTransfer.files
+
+            //     await sleep(5000);
+            //     let inputs = document.getElementsByTagName("input");
+            //     for (let i = 0; i < inputs.length; i++) {
+            //         console.log(inputs[i].files);
+            //     }
+
+
+            // });
+
+        }
+        else {
+            wrongNumberButton.click();
+            await sleep(500);
+
+        }
     }
 
 }
 
 async function sendAllMessages(messageTemplate, csvList) {
+    console.log(messageTemplate.split(/\n?----------\n?/))
 
     for (let i = 0; i < csvList.length; i++) {
         console.log(csvList[i]);
         let number = csvList[i][1];
         if (number) {
-            await sendMessageTo(number.trim(), formatMessage(messageTemplate, csvList[i]));
+            let messages = messageTemplate.split(/\n?----------\n?/)
+            for (let j = 0; j < messages.length; j++) {
+                let message = messages[j];
+                let inplace = j > 0; //Tiene que ser es el primero distinto de vacío
+                if (message.trim()) {
+                    await sendMessageTo(number.trim(), formatMessage(message, csvList[i]));
+                    await sleep((Math.random() + 1) * 5000);
+                }
+            }
         }
 
-
     }
-
 }
 
 
