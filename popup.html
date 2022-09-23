@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="main_container">
-      <h1>WhatsApp Bulk Messaging</h1>
+      <h1 class="pop-bold">WhatsApp Bulk Messaging</h1>
       <span>CSV Data</span>
       <textarea
         placeholder="name, phone"
@@ -26,14 +26,15 @@
           class="message"
           required
         ></textarea>
-        <button class="emoji_picker_button">Pick Emoji</button>
+        <button class="emoji_picker_button button-26">Pick Emoji</button>
           <div class="flex-row mg-t-10">
             <label>Input max wait time </label>
             <input id="input_max_time" type="number" class="input_time ml-5" min="1" max="10" value="5"></input> 
-            <button class="ml-20" id="add_msg_button">Add Mesagge</button>
+            <button class="ml-20 button-26" id="add_msg_button">Add Mesagge</button>
           </div>
           <div id="emoji_popup"></div>
       </div>
+      <hr>
       <span>Message Preview</span>
       <textarea
         readonly
@@ -42,9 +43,9 @@
         class="message_preview"
       ></textarea>
       <div class="mg-t-10 flex-row">
-        <button id="send_button">Send</button>
-        <progress id="progress_bar" class="ml-20" max="100" value="0"></progress>
-        <span id="progress_text" class="ml-20"></span>
+        <button id="send_button" class="button-37">Send</button>
+        <progress id="progress_bar" class="ml-20 align-center" max="100" value="0"></progress>
+        <span id="progress_text" class="ml-20 align-center" style="color: green;"></span>
         <!-- <span></span> -->
       </div>
     </div>

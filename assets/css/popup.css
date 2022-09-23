@@ -1,3 +1,13 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap'); */
+@font-face {
+    font-family: 'Poppins';
+    src: url('fonts/SansationLight/SansationLight.eot');
+    src: url('fonts/Poppins/Poppins-ExtraBold.ttf') format('truetype'),
+         url('fonts/Poppins/Poppins.svg#Poppins') format('svg');
+    font-weight: 900;
+    font-style: bolder;
+
+}
 
 .main_container{
     width: 400px;
@@ -6,6 +16,13 @@
     flex-direction: column;
     align-items: start;
     overflow: auto;
+    /* font-family: "Poppins"; */
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f3f3;
+}
+
+.pop-bold{
+    font-family: "Poppins";
 }
 
 .flex-col{
@@ -18,6 +35,7 @@
     display: flex;
     flex-direction: row;
     justify-content: stretch;
+    align-items: center;
 
 }
 
@@ -47,6 +65,10 @@
     width: 50px;
 }
 
+.align-center{
+    align-self: center;
+}
+
 #csv_text{
     height: 60px
 }
@@ -57,3 +79,80 @@ textarea {
     height: 120px;
   }
 
+
+  
+  /* CSS Fancy Styles*/
+  .button-26 {
+    appearance: button;
+    background-color: #1652F0;
+    border: 1px solid #1652F0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Graphik,-apple-system,system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+    font-size: 13px;
+    line-height: 1.15;
+    overflow: visible;
+    padding: 4px 6px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transition: all 80ms ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+  }
+  
+  .button-26:disabled {
+    opacity: .5;
+  }
+  
+  .button-26:focus {
+    outline: 0;
+  }
+  
+  .button-26:hover {
+    background-color: #0A46E4;
+    border-color: #0A46E4;
+  }
+  
+  .button-26:active {
+    background-color: #0039D7;
+    border-color: #0039D7;
+  }
+
+/* CSS */
+.button-37 {
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+  padding: 4px 7px;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-37:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .button-37 {
+    padding: 10px 30px;
+  }
+}
