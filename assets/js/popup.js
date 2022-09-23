@@ -20,10 +20,10 @@ add_msg_button.addEventListener("click", handleAddMessage);
 // Handles progress bar info
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log(sender.tab ?
-            "from a content script:" + sender.tab.url :
-            "from the extension");
-        console.log(request)
+        // console.log(sender.tab ?
+        //     "from a content script:" + sender.tab.url :
+        //     "from the extension");
+        // console.log(request)
         if (request.id === "progress") {
             progress_bar.max = request.total;
             progress_bar.value = request.progress;
@@ -52,7 +52,6 @@ chrome.runtime.onMessage.addListener(
 function handleAddMessage(evt) {
     const MSG_SEPARATOR = "\n----------\n";
     message_template.value += MSG_SEPARATOR;
-    // message_template.onchange();
     message_template.dispatchEvent(new Event('input'));
 }
 
@@ -66,7 +65,7 @@ function handleFileSelect(evt) {
         let text = event.target.result;
         chrome.storage.sync.set({ file: [file.name, text] });
         csv_text.value = text;
-        console.log(text);
+        // console.log(text);
         let csvList = csvToArray(text);
         // TODO: add warning in case parsing fails
         chrome.storage.sync.set({ csvList });
@@ -86,7 +85,7 @@ function handleCsvTextChange(evt) {
 }
 
 async function handleMessageSubmit() {
-    console.log("Submit pressed")
+    // console.log("Submit pressed")
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     let messageTemplate = message_template.value;

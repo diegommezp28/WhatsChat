@@ -16,7 +16,7 @@ async function sendMessageTo(number, message, inplace = false) {
         document.execCommand("insertText", false, message);
     }
     else {
-        console.log(message);
+        // console.log(message);
 
 
         let numberLink = document.createElement("a");
@@ -29,34 +29,11 @@ async function sendMessageTo(number, message, inplace = false) {
         let wrongNumberButton = document.querySelector('[data-testid="popup-controls-ok"]');
         if (!wrongNumberButton) {
             let sendButton = document.querySelector('[data-testid="compose-btn-send"]');
-            console.log(sendButton);
+            // console.log(sendButton);
             if (sendButton) {
                 sendButton.click();
                 await sleep(500);
             }
-
-            // // Take this with a giant grain of salt
-            // let clip = document.querySelector('[data-testid="conversation-clip"]');
-            // clip.children[0].click();
-            // await sleep(300);
-            // let inputDiv = document.querySelector('[data-testid="attach-document"]').nextSibling;
-            // chrome.storage.sync.get(['file'], async (result) => {
-            //     let fileList = result.file;
-            //     let file = new File([fileList[1]], fileList[0], { type: 'text/plain' })
-            //     console.log(typeof file);
-            //     // console.log(file);
-            //     const dataTransfer = new DataTransfer();
-            //     dataTransfer.items.add(file)
-            //     inputDiv.files = dataTransfer.files
-
-            //     await sleep(5000);
-            //     let inputs = document.getElementsByTagName("input");
-            //     for (let i = 0; i < inputs.length; i++) {
-            //         console.log(inputs[i].files);
-            //     }
-
-
-            // });
 
         }
         else {
@@ -69,7 +46,7 @@ async function sendMessageTo(number, message, inplace = false) {
 }
 
 function sendProgress(prog, total, numProgress, totalNum) {
-    console.log(`Progress: ${prog}`)
+    // console.log(`Progress: ${prog}`)
     chrome.runtime.sendMessage({
         id: "progress", progress: prog, total: total,
         numProgress: numProgress, totalNum: totalNum
@@ -78,12 +55,12 @@ function sendProgress(prog, total, numProgress, totalNum) {
 }
 
 async function sendAllMessages(messageTemplate, csvList) {
-    console.log(messageTemplate.split(/\n?[-]{5,}\n?/))
+    // console.log(messageTemplate.split(/\n?[-]{5,}\n?/))
     let messages = messageTemplate.split(/\n?[-]{5,}\n?/)
     sendProgress(0, csvList.length * messages.length, 0, csvList.length);
 
     for (let i = 0; i < csvList.length; i++) {
-        console.log(csvList[i]);
+        // console.log(csvList[i]);
         let number = csvList[i][1];
         if (number) {
             for (let j = 0; j < messages.length; j++) {
@@ -93,15 +70,14 @@ async function sendAllMessages(messageTemplate, csvList) {
                     await sendMessageTo(number.trim(), formatMessage(message, csvList[i]));
                     chrome.storage.sync.get(['checkedMax'], async (result) => {
                         let checkedMax = result.checkedMax;
-                        console.log(checkedMax);
+                        // console.log(checkedMax);
                         let msToWait = (Math.random()) * ((checkedMax - 1) * 1000) + 1000;
-                        console.log(`ms to wait ${msToWait}`)
+                        // console.log(`ms to wait ${msToWait}`)
                         await sleep(msToWait);
                     });
                 }
                 sendProgress(i * messages.length + j + 1, csvList.length * messages.length, i + 1, csvList.length);
             }
-            // sendProgress(i + 1, csvList.length);
         }
         else {
             sendProgress((i + 1) * messages.length, csvList.length * messages.length, i + 1, csvList.length);
@@ -131,38 +107,12 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-//input field for template -->
-//input field to upload csv -->
-// Format message (validate csv, ?
-// replace fields),  --->
-// validate numbers, --->
-// If number is wrong act upon it -->
-// find text box, edit text box, send message, wait a little bit, repeat --->
-//Message preview --->
-//Ranom time between sending --->
-//css
-//Attach files, add caption.  
-// emojis, text style)
-//Stats and % of succesfully sent messages
-
-// Number without WhatsApp, +573022371078, 23
-// invalid phone number, +57310341, 22
-// lenny, +573106882967, 21
-// valentina, +573103414225, 22
-// diego, +573022371079, 22
-// Number without WhatsApp, +573022371078, 23
-// invalid phone number, +57310341, 22
-// lenny, +573106882967, 21
-// valentina, +573103414225, 22
-
-//Release
-
 chrome.storage.sync.get(['csvList'], (result) => {
     let csvList = result.csvList;
-    console.log(csvList)
+    // console.log(csvList)
     chrome.storage.sync.get(['messageTemplate'], (result) => {
         let messageTemplate = result.messageTemplate;
-        console.log(messageTemplate);
+        // console.log(messageTemplate);
         sendAllMessages(messageTemplate, csvList)
     });
 });
