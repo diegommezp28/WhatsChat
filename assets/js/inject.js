@@ -68,22 +68,43 @@ async function sendMessageTo(number, message, inplace = false) {
 
 }
 
+function sendProgress(prog, total, numProgress, totalNum) {
+    console.log(`Progress: ${prog}`)
+    chrome.runtime.sendMessage({
+        id: "progress", progress: prog, total: total,
+        numProgress: numProgress, totalNum: totalNum
+    },
+        () => { });
+}
+
 async function sendAllMessages(messageTemplate, csvList) {
-    console.log(messageTemplate.split(/\n?----------\n?/))
+    console.log(messageTemplate.split(/\n?[-]{5,}\n?/))
+    let messages = messageTemplate.split(/\n?[-]{5,}\n?/)
+    sendProgress(0, csvList.length * messages.length, 0, csvList.length);
 
     for (let i = 0; i < csvList.length; i++) {
         console.log(csvList[i]);
         let number = csvList[i][1];
         if (number) {
-            let messages = messageTemplate.split(/\n?----------\n?/)
             for (let j = 0; j < messages.length; j++) {
                 let message = messages[j];
                 let inplace = j > 0; //Tiene que ser es el primero distinto de vacío
                 if (message.trim()) {
                     await sendMessageTo(number.trim(), formatMessage(message, csvList[i]));
-                    await sleep((Math.random() + 1) * 5000);
+                    chrome.storage.sync.get(['checkedMax'], async (result) => {
+                        let checkedMax = result.checkedMax;
+                        console.log(checkedMax);
+                        let msToWait = (Math.random()) * ((checkedMax - 1) * 1000) + 1000;
+                        console.log(`ms to wait ${msToWait}`)
+                        await sleep(msToWait);
+                    });
                 }
+                sendProgress(i * messages.length + j + 1, csvList.length * messages.length, i + 1, csvList.length);
             }
+            // sendProgress(i + 1, csvList.length);
+        }
+        else {
+            sendProgress((i + 1) * messages.length, csvList.length * messages.length, i + 1, csvList.length);
         }
 
     }
@@ -114,13 +135,13 @@ function capitalizeFirstLetter(string) {
 //input field to upload csv -->
 // Format message (validate csv, ?
 // replace fields),  --->
-// validate numbers, 
+// validate numbers, --->
 // If number is wrong act upon it -->
 // find text box, edit text box, send message, wait a little bit, repeat --->
 //Message preview --->
-//Ranom time between sending
+//Ranom time between sending --->
 //css
-//Attach files, add caption
+//Attach files, add caption.  
 // emojis, text style)
 //Stats and % of succesfully sent messages
 
@@ -136,7 +157,6 @@ function capitalizeFirstLetter(string) {
 
 //Release
 
-// let messageTemplate = chrome.storage.sync.get({ messageTemplate });
 chrome.storage.sync.get(['csvList'], (result) => {
     let csvList = result.csvList;
     console.log(csvList)

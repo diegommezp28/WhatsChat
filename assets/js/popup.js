@@ -4,6 +4,10 @@ let send_button = document.getElementById("send_button");
 let message_template = document.getElementById("message");
 let message_preview = document.getElementById("message_preview");
 let add_msg_button = document.getElementById("add_msg_button");
+let input_max_time = document.getElementById("input_max_time");
+let progress_bar = document.getElementById("progress_bar");
+let progress_text = document.getElementById("progress_text");
+
 
 csv_file.addEventListener("change", handleFileSelect);
 csv_text.addEventListener("input", handleCsvTextChange);
@@ -12,6 +16,22 @@ message_template.addEventListener("input", handleTemplateChange);
 add_msg_button.addEventListener("click", handleAddMessage);
 // console.log("hola");
 // debugger;
+
+// Handles progress bar info
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        console.log(sender.tab ?
+            "from a content script:" + sender.tab.url :
+            "from the extension");
+        console.log(request)
+        if (request.id === "progress") {
+            progress_bar.max = request.total;
+            progress_bar.value = request.progress;
+            progress_text.innerText = `${request.numProgress}/${request.totalNum} Numbers Messaged`;
+
+        }
+    }
+);
 
 (async () => {
     const src = chrome.runtime.getURL('assets/js/vanillaEmojiPicker.js');
@@ -66,15 +86,19 @@ function handleCsvTextChange(evt) {
 }
 
 async function handleMessageSubmit() {
+    console.log("Submit pressed")
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     let messageTemplate = message_template.value;
     let contacts_csv = csv_text.value;
+    let maxValue = isNaN(input_max_time.value) ? 5 : parseInt(input_max_time.value);
+    let checkedMax = Math.min(Math.max(maxValue, 1), 15) //Just accepts values bewteen 1 and 15 secs
 
     let csvList = csvToArray(contacts_csv);
 
     chrome.storage.sync.set({ messageTemplate });
     chrome.storage.sync.set({ csvList });
+    chrome.storage.sync.set({ checkedMax });
 
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
@@ -101,7 +125,7 @@ function csvToArray(str, delimiter = ',', header = false) {
     // split values from each row into an array
     const arr = [];
     for (let i = 0; i < rows.length; i++) {
-        arr.push(rows[i].split(','));
+        arr.push(rows[i].split(delimiter));
     }
     // TODO: add warning if parsing fails
     return arr;

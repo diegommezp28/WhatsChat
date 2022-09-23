@@ -31,7 +31,7 @@
 }
 
 .mg-t-10{
-    margin-top: 10px;
+    margin-top: 8px;
     /* margin-bottom: 20px; */
 }
 
@@ -39,7 +39,21 @@
     margin-left: 20px;
 }
 
+.ml-5{
+    margin-left: 5px;
+}
+
+.input_time{
+    width: 50px;
+}
+
+#csv_text{
+    height: 60px
+}
+
+
 textarea {
     width: 300px;
-    height: 200px;
+    height: 120px;
   }
+
